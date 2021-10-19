@@ -56,8 +56,8 @@ def split_train_val(split_percent):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--train_percent', type=float, default=0.9)
-    parser.add_argument('--val_percent', type=float, default=0.1)
+    parser.add_argument('--train_percent', type=float, default=0.7)
+    parser.add_argument('--val_percent', type=float, default=0.3)
     args = parser.parse_args()
     
     split_percent = [args.train_percent, args.val_percent]
