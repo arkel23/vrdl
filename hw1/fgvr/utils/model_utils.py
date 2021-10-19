@@ -7,22 +7,67 @@ from fgvr.models import model_extractor
 def get_model_name(path_model):
     """parse model name"""
     segments = path_model.split('/')[-2].split('_')
-    return segments[0] + '_' + segments[1] + '_' + segments[2]
+    if segments[0] == 'linear' or segments[0] == 'student':
+        return segments [1]
+    else:
+        return segments[0]
 
 
-def load_model(path_model, n_cls, layers):
-    print('==> loading model')
+def load_model_head(path_model, n_cls, pretrained, layers):
+    print('==> loading model with classification head')
+    
     model_name = get_model_name(path_model)
-    model = model_extractor(model_name, num_classes=n_cls, layers=layers)
-
-    state_dict = torch.load(path_model)['model']
-    for key in list(state_dict.keys())[-2:]:
-        state_dict.pop(key)
-
-    ret = model.load_state_dict(state_dict, strict=False)
-    print('Missing keys when loading pretrained weights: {}'.format(ret.missing_keys))
-    print('Unexpected keys when loading pretrained weights: {}'.format(ret.unexpected_keys))
+    model = model_extractor(model_name, num_classes=n_cls, 
+                            pretrained=pretrained, layers=layers)
+    
+    model.load_state_dict(torch.load(path_model)['model'], strict=True)
     print('==> done')
+    
+    return model
+
+
+def load_model_nohead(path_model, model_name, n_cls, pretrained, layers):
+    if path_model:
+        model_name = get_model_name(path_model)
+    else:
+        model_name = model_name
+
+    model = model_extractor(model_name, num_classes=n_cls, 
+                            pretrained=pretrained, layers=layers)
+
+    if path_model:
+        print('==> loading model without classification head')
+        state_dict = torch.load(path_model)['model']
+        for key in list(state_dict.keys())[-2:]:
+            state_dict.pop(key)
+
+        ret = model.load_state_dict(state_dict, strict=False)
+        print('Missing keys when loading pretrained weights: {}'.format(ret.missing_keys))
+        print('Unexpected keys when loading pretrained weights: {}'.format(ret.unexpected_keys))
+        print('==> done')
+    
+    return model
+
+
+def load_model_inference(
+    path_backbone, model_name, n_cls, pretrained, layers):
+    if path_backbone:
+        model_name = get_model_name(path_backbone)
+    else:
+        model_name = model_name
+
+    model = model_extractor(model_name, num_classes=n_cls, 
+                            pretrained=pretrained, layers=layers)
+
+    if path_backbone:
+        print('==> loading model backbone')
+        state_dict = torch.load(path_backbone)['model']
+
+        ret = model.load_state_dict(state_dict, strict=False)
+        print('Missing keys when loading pretrained weights: {}'.format(ret.missing_keys))
+        print('Unexpected keys when loading pretrained weights: {}'.format(ret.unexpected_keys))
+        print('==> done')
+    
     return model
 
 

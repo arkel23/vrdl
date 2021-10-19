@@ -11,5 +11,8 @@ def resnet(model_name, num_classes, pretrained):
             
     num_features = model.fc.in_features
     model.fc = nn.Linear(num_features, num_classes)
+    print('Loading pt={} {} model with {} classes output head'.format(
+        pretrained, model_name, num_classes
+    ))
 
     return model
