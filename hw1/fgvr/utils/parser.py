@@ -17,7 +17,7 @@ def parse_common():
     parser.add_argument('--image_size', type=int, default=448, help='image_size')
     parser.add_argument('--batch_size', type=int, default=16, help='batch_size')
     parser.add_argument('--num_workers', type=int, default=4, help='num of workers to use')
-    parser.add_argument('--epochs', type=int, default=100, help='number of training epochs')
+    parser.add_argument('--epochs', type=int, default=50, help='number of training epochs')
 
     # optimization
     parser.add_argument('--opt', default='sgd', type=str, help='Optimizer (default: "sgd"')
