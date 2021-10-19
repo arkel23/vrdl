@@ -1,7 +1,7 @@
 **/wandb/
 **/results/
 .idea/
-data/
+**/data/*
 output*/
 ckpts/
 *.pth
@@ -13,7 +13,9 @@ tmp*.py
 *.out
 *.pdf
 *.sh
-!setup.sh
+!**/prepare_dataset.sh
+!**/prepare_dataset.py
+!**/setup.sh
 !**/scripts/*
 
 # Byte-compiled / optimized / DLL files
