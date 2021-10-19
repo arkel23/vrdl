@@ -15,20 +15,20 @@ def parse_common():
     parser.add_argument('--save_freq', type=int, default=20, help='save frequency')
     parser.add_argument('--dataset_path', type=str, default='./data/', help='path to download/read datasets')
     parser.add_argument('--image_size', type=int, default=448, help='image_size')
-    parser.add_argument('--batch_size', type=int, default=32, help='batch_size')
+    parser.add_argument('--batch_size', type=int, default=64, help='batch_size')
     parser.add_argument('--num_workers', type=int, default=4, help='num of workers to use')
     parser.add_argument('--epochs', type=int, default=100, help='number of training epochs')
 
     # optimization
     parser.add_argument('--opt', default='sgd', type=str, help='Optimizer (default: "sgd"')
-    parser.add_argument('--base_lr', type=float, default=0.008, help='base learning rate to scale based on batch size')
+    parser.add_argument('--base_lr', type=float, default=0.004, help='base learning rate to scale based on batch size')
     parser.add_argument('--momentum', type=float, default=0.9, help='momentum')
     parser.add_argument('--weight_decay', type=float, default=1e-4, help='weight decay')
     parser.add_argument('--clip_grad', type=float, default=None, help='Clip gradient norm (default: None, no clipping)')
     # scheduler
     parser.add_argument('--sched', default='cosine', type=str, choices=['cosine', 'step'],
                         help='LR scheduler (default: "cosine"')
-    parser.add_argument('--warmup_epochs', type=int, default=5, help='epochs to warmup LR, if scheduler supports')
+    parser.add_argument('--warmup_epochs', type=int, default=2, help='epochs to warmup LR, if scheduler supports')
     parser.add_argument('--decay_rate', type=float, default=0.1, help='decay rate for learning rate')
     parser.add_argument('--decay_epochs', type=float, default=30, help='epoch interval to decay LR')
 
