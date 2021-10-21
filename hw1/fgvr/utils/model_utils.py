@@ -13,11 +13,12 @@ def get_model_name(path_model):
         return segments[0]
 
 
-def load_model_head(path_model, n_cls, pretrained, layers):
+def load_model_head(path_model, n_cls, image_size, freeze, pretrained, layers):
     print('==> loading model with classification head')
     
     model_name = get_model_name(path_model)
     model = model_extractor(model_name, num_classes=n_cls, 
+                            image_size=image_size, freeze=freeze,
                             pretrained=pretrained, layers=layers)
     
     model.load_state_dict(torch.load(path_model)['model'], strict=True)
@@ -26,13 +27,15 @@ def load_model_head(path_model, n_cls, pretrained, layers):
     return model
 
 
-def load_model_nohead(path_model, model_name, n_cls, pretrained, layers):
+def load_model_nohead(
+    path_model, model_name, image_size, n_cls, freeze, pretrained, layers):
     if path_model:
         model_name = get_model_name(path_model)
     else:
         model_name = model_name
 
     model = model_extractor(model_name, num_classes=n_cls, 
+                            image_size=image_size, freeze=freeze,
                             pretrained=pretrained, layers=layers)
 
     if path_model:
@@ -50,13 +53,14 @@ def load_model_nohead(path_model, model_name, n_cls, pretrained, layers):
 
 
 def load_model_inference(
-    path_backbone, model_name, n_cls, pretrained, layers):
+    path_backbone, model_name, n_cls, image_size, freeze, pretrained, layers):
     if path_backbone:
         model_name = get_model_name(path_backbone)
     else:
         model_name = model_name
 
     model = model_extractor(model_name, num_classes=n_cls, 
+                            image_size=image_size, freeze=freeze,
                             pretrained=pretrained, layers=layers)
 
     if path_backbone:

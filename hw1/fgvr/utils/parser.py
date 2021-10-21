@@ -39,6 +39,7 @@ def parse_common():
     # others 
     parser.add_argument('--deit_recipe', action='store_true', help='use deit augs')
     parser.add_argument('--pretrained', action='store_true', help='use pretrained model on imagenet')
+    parser.add_argument('--freeze', action='store_true', help='freeze backbone')
     
     return parser
 
@@ -74,14 +75,15 @@ def parse_option_vanilla():
 
     parser = parse_common()
     parser.add_argument('--model', type=str, default='resnet18',
-                        choices=['resnet18', 'resnet34' ,'resnet50'])
+                        choices=['resnet18', 'resnet34' ,'resnet50',
+                                 'B_16', 'B_32', 'L_16'])
     args = parser.parse_args()
 
     args = add_adjust_common_dependent(args)
 
-    args.model_name = '{}_is{}_bs{}_blr{}decay{}_pt{}_trial{}'.format(
+    args.model_name = '{}_is{}_bs{}_blr{}decay{}_pt{}fz{}_trial{}'.format(
         args.model, args.image_size, args.batch_size, args.base_lr, 
-        args.weight_decay, args.pretrained, args.trial)
+        args.weight_decay, args.pretrained, args.freeze, args.trial)
 
     args.save_folder = os.path.join('save', 'models', args.model_name)
     os.makedirs(args.save_folder, exist_ok=True)
@@ -94,7 +96,8 @@ def parse_option_inference():
 
     parser = parse_common()
     parser.add_argument('--model', type=str, default=None,
-                        choices=[None, 'resnet18', 'resnet34' ,'resnet50'])
+                        choices=[None, 'resnet18', 'resnet34' ,'resnet50',
+                                 'B_16', 'B_32', 'L_16'])
     parser.add_argument('--path_backbone', type=str, default=None, help='backbone ckpt')
     parser.add_argument('--path_classifier', type=str, default=None, help='classifier ckpt')
     args = parser.parse_args()

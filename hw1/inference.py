@@ -37,10 +37,12 @@ def main():
     # model
     if not args.path_classifier:
         model = load_model_inference(
-            args.path_backbone, args.model, n_cls, args.pretrained, 'last_only')
+            args.path_backbone, args.model, n_cls, args.image_size, 
+            args.pretrained, 'last_only')
     else:
         model = load_model_inference(
-            args.path_backbone, args.model, n_cls, args.pretrained, 'default')
+            args.path_backbone, args.model, n_cls, args.image_size, 
+            args.pretrained, 'default')
     # load the classifier head if needed and add an if in the model output
     
     model.to(args.device)

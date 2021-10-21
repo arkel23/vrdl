@@ -4,12 +4,17 @@ import torchvision.models.feature_extraction as feature_extraction
 from einops.layers.torch import Rearrange
 
 from .resnet import resnet
+from .vit import vit
 
 
-def model_extractor(model_name, num_classes, pretrained=False, layers='default'):
+def model_extractor(
+    model_name, num_classes, image_size, 
+    freeze=False, pretrained=False, layers='default'):
     if 'resnet' in model_name:
-        m = resnet(model_name, num_classes, pretrained)
-    model = Extractor(m, model_name, layers)
+        m = resnet(model_name, num_classes, freeze, pretrained)
+        model = Extractor(m, model_name, layers)
+    else:
+        model = vit(model_name, num_classes, image_size, pretrained)
     return model
 
 

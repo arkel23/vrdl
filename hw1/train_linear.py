@@ -55,7 +55,8 @@ def main():
     
     # backbone
     backbone = load_model_nohead(
-        args.path_model, args.model, n_cls, args.pretrained, 'default')
+        args.path_model, args.model, n_cls, args.image_size,
+        args.pretrained, 'default')
     backbone.to(args.device)
     backbone.eval()
     

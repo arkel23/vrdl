@@ -23,8 +23,9 @@ def main():
     train_loader, val_loader, n_cls = build_dataloaders(args)
 
     # model and criterion
-    model = model_extractor(args.model, num_classes=n_cls, 
-                            pretrained=args.pretrained, layers='last_only')
+    model = model_extractor(
+        args.model, n_cls, args.image_size,
+        args.freeze, args.pretrained, 'last_only')
     model.to(args.device)
     criterion = torch.nn.CrossEntropyLoss().to(args.device)
 
