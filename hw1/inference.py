@@ -72,7 +72,7 @@ def main():
         
         submission.append([img_path, predicted_class_name])
         if i % 100 == 0:
-            print(img_path, predicted_class_name, predicted_class_id)
+            print('{}/{}: {} | {} | {}'.format(i, len(test_images), img_path, predicted_class_name, predicted_class_id))
         
     np.savetxt('answer.txt', submission, fmt='%s')
 
