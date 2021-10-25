@@ -9,6 +9,8 @@ def get_model_name(path_model):
     segments = path_model.split('/')[-2].split('_')
     if segments[0] == 'linear' or segments[0] == 'student':
         return segments [1]
+    elif 'B' in segments or 'L' in segments:
+        return segments[0] + '_' + segments[1]       
     else:
         return segments[0]
 
@@ -53,14 +55,14 @@ def load_model_nohead(
 
 
 def load_model_inference(
-    path_backbone, model_name, n_cls, image_size, freeze, pretrained, layers):
+    path_backbone, model_name, n_cls, image_size, pretrained, layers):
     if path_backbone:
         model_name = get_model_name(path_backbone)
     else:
         model_name = model_name
 
     model = model_extractor(model_name, num_classes=n_cls, 
-                            image_size=image_size, freeze=freeze,
+                            image_size=image_size,
                             pretrained=pretrained, layers=layers)
 
     if path_backbone:

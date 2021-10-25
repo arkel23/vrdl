@@ -57,7 +57,7 @@ def main():
     df_id2name = pd.read_csv(id2name_path)
     
     submission = []
-    for img_path in test_images:
+    for i, img_path in enumerate(test_images):
         img_path_full = os.path.join(args.dataset_path, 'test', img_path)
         img = prepare_img(img_path_full, args.image_size).to(args.device)
         
@@ -70,9 +70,10 @@ def main():
         predicted_class_name = df_id2name[
             df_id2name['class_id']==predicted_class_id]['class_name'].values[0]
         
-        print(img_path, predicted_class_name, predicted_class_id)
         submission.append([img_path, predicted_class_name])
-    
+        if i % 100 == 0:
+            print(img_path, predicted_class_name, predicted_class_id)
+        
     np.savetxt('answer.txt', submission, fmt='%s')
 
 
