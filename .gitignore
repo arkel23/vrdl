@@ -15,6 +15,10 @@ tmp*.py
 *.sh
 !**/prepare_dataset.sh
 !**/prepare_dataset.py
+!**/train.csv
+!**/val.csv
+!**/train_val.csv
+!**/id2name_dic.csv
 !**/setup.sh
 !**/scripts/*
 
