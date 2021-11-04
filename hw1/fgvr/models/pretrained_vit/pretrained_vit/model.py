@@ -152,8 +152,7 @@ class ViT(nn.Module):
     def extract_patch_representation(self, images):
         b, c, fh, fw = images.shape
         images = self.patch_embedding(images)  # b,d,gh,gw
-        return images.flatten(2).transpose(1, 2)
-        #return einops.rearrange(images, 'b d gh gw -> b (gh gw) d')
+        return einops.rearrange(images, 'b d gh gw -> b (gh gw) d')
 
     def extract_features(self, images, text=None, mask=None):
         b, c, fh, fw = images.shape
