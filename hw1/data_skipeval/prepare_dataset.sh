@@ -6,4 +6,4 @@ mkdir test
 unzip training_images.zip -d train
 unzip testing_images.zip -d test
 
-python prepare_dataset.py
+python prepare_dataset.py --train_percent 1 --val_percent 0
