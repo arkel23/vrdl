@@ -9,7 +9,7 @@ def get_model_name(path_model):
     segments = path_model.split('/')[-2].split('_')
     if segments[0] == 'linear' or segments[0] == 'student':
         return segments [1]
-    elif 'B' in segments or 'L' in segments:
+    elif 'H' in segments or 'B' in segments or 'L' in segments:
         return segments[0] + '_' + segments[1]       
     else:
         return segments[0]

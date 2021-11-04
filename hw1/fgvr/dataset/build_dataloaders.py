@@ -26,11 +26,14 @@ def build_dataloaders(args, vanilla=True):
                                    num_workers=args.num_workers, 
                                    pin_memory=True, drop_last=True, 
                                    sampler=train_sampler)    
-    val_loader = data.DataLoader(val_set, batch_size=args.batch_size//2, 
+    if not args.skip_eval:
+        val_loader = data.DataLoader(val_set, batch_size=args.batch_size//2, 
                                  shuffle=False, 
                                  num_workers=int(args.num_workers/2), 
                                  pin_memory=True, sampler=val_sampler)
-    
+    else:
+        val_loader = None
+
     if vanilla:
         return train_loader, val_loader, n_cls
     return train_loader, val_loader, n_cls, n_data

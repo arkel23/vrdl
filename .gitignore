@@ -2,6 +2,7 @@
 **/results/
 .idea/
 **/data/*
+**/data_skipeval/*
 output*/
 ckpts/
 *.pth

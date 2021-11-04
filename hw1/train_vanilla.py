@@ -14,6 +14,7 @@ from fgvr.utils.misc_utils import count_params_single, set_seed, summary_stats
 def main():
     time_start = time.time()
     best_acc = 0
+    best_epoch = 0
     max_memory = 0
 
     args = parse_option_vanilla()
@@ -49,7 +50,11 @@ def main():
         lr_scheduler.step(epoch)
         
         train_acc, train_loss = train(epoch, train_loader, model, criterion, optimizer, args)
-        val_acc, val_loss = validate(val_loader, model, criterion, args)
+        if not args.skip_eval:
+            val_acc, val_loss = validate(val_loader, model, criterion, args)
+        else:
+            val_acc = 0
+            val_loss = 0
 
         if args.local_rank == 0:
             print("==> Training...Epoch: {} | LR: {}".format(epoch, optimizer.param_groups[0]['lr']))
