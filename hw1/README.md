@@ -25,18 +25,21 @@ data folder and run `prepare_dataset.sh`.
 ### Train model
 
 Train the best model:
+
 `python train_vanilla.py --model L_16 --base_lr 0.08 --batch_size 4 --pretrained --weight_decay 0 --clip_grad 1.0 --skip_eval --dataset_path data_skipeval`
 
 ### Evaluation
 
 Download the pretrained checkpoint from [Google Drive](https://drive.google.com/drive/folders/1l1RLUiglv0MHUREi56KBoVFckOulcbVM?usp=sharing)
 of best model and put it into folder:
+
 `mv L_16_last.pth save/models/L_16_is448_bs4_blr0.08decay0.0_ptTruefzFalse_trial0_skipTrue/`
+
 `python inference.py --path_backbone save/models/L_16_is448_bs4_blr0.08decay0.0_ptTruefzFalse_trial0_skipTrue/L_16_last.pth`
 
 ## Reference
-* [](https://github.com/HobbitLong/RepDistiller)
-* [](https://github.com/arkel23/IntermediateFeaturesAugmentedRepDistiller)
-* [](https://github.com/arkel23/PyTorch-Pretrained-ViT)
-* [](https://github.com/lukemelas/PyTorch-Pretrained-ViT)
+* <https://github.com/HobbitLong/RepDistiller>
+* <https://github.com/arkel23/IntermediateFeaturesAugmentedRepDistiller>
+* <https://github.com/arkel23/PyTorch-Pretrained-ViT>
+* <https://github.com/lukemelas/PyTorch-Pretrained-ViT>
 
