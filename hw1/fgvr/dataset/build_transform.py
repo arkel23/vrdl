@@ -3,7 +3,6 @@ from timm.data import create_transform
 
 
 def build_deit_transform(is_train, args):
-    
     ''' taken from DeiT paper
     https://arxiv.org/abs/2012.12877
     https://github.com/facebookresearch/deit/blob/main/main.py'''
@@ -17,7 +16,7 @@ def build_deit_transform(is_train, args):
     args.remode = 'pixel'
     args.recount = 1
     args.resplit = False
-    
+
     resize_im = args.image_size > 32
     if is_train:
         # this should always dispatch to transforms_imagenet_train
@@ -40,13 +39,15 @@ def build_deit_transform(is_train, args):
 
     t = []
     if resize_im:
-        size = int((256 / 224) * args.image_size) # to maintain same ratio w.r.t. 224 images
-        t.append(transforms.Resize(size, interpolation=transforms.InterpolationMode.BICUBIC))
+        # to maintain same ratio w.r.t. 224 images
+        size = int((256 / 224) * args.image_size)
+        t.append(transforms.Resize(
+            size, interpolation=transforms.InterpolationMode.BICUBIC))
         t.append(transforms.CenterCrop(args.image_size))
 
     t.append(transforms.ToTensor())
     t.append(transforms.Normalize(mean=[0.5, 0.5, 0.5],
-								    std=[0.5, 0.5, 0.5]))
+                                  std=[0.5, 0.5, 0.5]))
     return transforms.Compose(t)
 
 
@@ -54,27 +55,27 @@ def build_transform(args, split):
     if split == 'train':
         if args.deit_recipe:
             transform = build_deit_transform(is_train=True, args=args)
-        else:        
+        else:
             transform = transforms.Compose([
                 transforms.Resize((args.image_size+32, args.image_size+32)),
                 transforms.RandomCrop((args.image_size, args.image_size)),
                 transforms.RandomHorizontalFlip(),
-                transforms.ColorJitter(brightness=0.1, 
-                contrast=0.1, saturation=0.1, hue=0.1),
+                transforms.ColorJitter(brightness=0.1,
+                                       contrast=0.1, saturation=0.1, hue=0.1),
                 transforms.ToTensor(),
                 transforms.Normalize(mean=[0.5, 0.5, 0.5],
-                                    std=[0.5, 0.5, 0.5])
-                ])     
+                                     std=[0.5, 0.5, 0.5])
+            ])
     else:
         if args.deit_recipe:
             transform = build_deit_transform(is_train=False, args=args)
         else:
             transform = transforms.Compose([
                 transforms.Resize(args.image_size+32),
-                transforms.CenterCrop(args.image_size), 
+                transforms.CenterCrop(args.image_size),
                 transforms.ToTensor(),
                 transforms.Normalize(mean=[0.5, 0.5, 0.5],
-                                        std=[0.5, 0.5, 0.5])
-                ])
-    
+                                     std=[0.5, 0.5, 0.5])
+            ])
+
     return transform

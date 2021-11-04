@@ -11,6 +11,7 @@ ckpts/
 *.jpg
 tmp*.py
 
+*.nfs*
 *.out
 *.pdf
 *.sh

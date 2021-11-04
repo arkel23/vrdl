@@ -16,14 +16,15 @@ def set_seed(seed=0, rank=0):
     random.seed(seed + rank)
 
 
-def summary_stats(epochs, time_total, best_acc, best_epoch, max_memory, no_params):
+def summary_stats(epochs, time_total, best_acc,
+                  best_epoch, max_memory, no_params):
     time_avg = time_total / epochs
     best_time = time_avg * best_epoch
     no_params = no_params / (1e6)
 
     print('''Total run time (s): {}
           Average time per epoch (s): {}
-          Best accuracy (%): {} at epoch {}. Time to reach this accuracy (s): {}
+          Best accuracy (%): {} at epoch {}. Time to reach this (s): {}
           Max VRAM consumption (GB): {}
           Total number of parameters in all modules (M): {}
           '''.format(time_total, time_avg, best_acc, best_epoch,
@@ -41,7 +42,8 @@ def summary_stats(epochs, time_total, best_acc, best_epoch, max_memory, no_param
 
 
 def accuracy(output, target, topk=(1,)):
-    """Computes the accuracy over the k top predictions for the specified values of k"""
+    """Computes the accuracy over the k top predictions
+    for the specified values of k"""
     with torch.no_grad():
         maxk = max(topk)
         batch_size = target.size(0)
@@ -55,10 +57,11 @@ def accuracy(output, target, topk=(1,)):
             correct_k = correct[:k].reshape(-1).float().sum(0, keepdim=True)
             res.append(correct_k.mul_(100.0 / batch_size))
         return res
-    
+
 
 class AverageMeter(object):
     """Computes and stores the average and current value"""
+
     def __init__(self):
         self.reset()
 

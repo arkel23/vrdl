@@ -8,8 +8,8 @@ from .vit import vit
 
 
 def model_extractor(
-    model_name, num_classes, image_size, 
-    freeze=False, pretrained=False, layers='default'):
+        model_name, num_classes, image_size,
+        freeze=False, pretrained=False, layers='default'):
     if 'resnet' in model_name:
         m = resnet(model_name, num_classes, freeze, pretrained)
         model = Extractor(m, model_name, layers)
@@ -25,26 +25,26 @@ class Extractor(nn.Module):
         return_nodes = self.get_return_nodes(model, model_name, layers)
         self.model = feature_extraction.create_feature_extractor(
             model, return_nodes=return_nodes)
-        
+
         if layers not in ['default', 'last_only']:
             self.pool = nn.Sequential(
                 nn.AdaptiveAvgPool2d(1), Rearrange('b c 1 1 -> b c'))
-  
+
     def forward(self, x, classify_only=True):
         x = list(self.model(x).values())
         if classify_only:
             return x[-1]
         else:
             if hasattr(self, 'pool'):
-                return [self.pool(feats) for feats in x[:-1]] + [x[-1]]  
+                return [self.pool(feats) for feats in x[:-1]] + [x[-1]]
             else:
                 return x
-            
+
     def get_return_nodes(self, model, model_name, layers):
-        # train_nodes, eval_nodes = feature_extraction.get_graph_node_names(model)
+        # train_n, eval_n = feature_extraction.get_graph_node_names(model)
         if layers == 'last':
             if model_name == 'resnet18':
-                return_nodes =  {
+                return_nodes = {
                     'layer4.0.relu': 'layerminus4',
                     'layer4.0.relu_1': 'layerminus3',
                     'layer4.1.relu': 'layerminus2',
@@ -52,7 +52,7 @@ class Extractor(nn.Module):
                     'fc': 'layerminus0'
                 }
             elif model_name == 'resnet34':
-                return_nodes =  {
+                return_nodes = {
                     'layer4.0.relu': 'layerminus6',
                     'layer4.0.relu_1': 'layerminus5',
                     'layer4.1.relu': 'layerminus4',
@@ -62,7 +62,7 @@ class Extractor(nn.Module):
                     'fc': 'layerminus0'
                 }
             elif model_name == 'resnet50':
-                return_nodes =  {
+                return_nodes = {
                     'layer4.0.relu': 'layerminus9',
                     'layer4.0.relu_1': 'layerminus8',
                     'layer4.0.relu_2': 'layerminus7',
@@ -76,7 +76,7 @@ class Extractor(nn.Module):
                 }
             else:
                 raise NotImplementedError
-        
+
         elif layers == 'blocks':
             if model_name == 'resnet18':
                 return_nodes = {
@@ -107,15 +107,17 @@ class Extractor(nn.Module):
                 }
             else:
                 raise NotImplementedError
-                            
+
         elif layers == 'all':
-            train_nodes, eval_nodes = feature_extraction.get_graph_node_names(model)
+            train_nodes, eval_nodes = feature_extraction.get_graph_node_names(
+                model)
             if model_name in ['resnet18', 'resnet34', 'resnet50']:
-                return_nodes = {node:i for i, node in enumerate(train_nodes) if 'relu' in train_nodes}
-                return_nodes['fc'] = 'layerminus0' 
+                return_nodes = {node: i for i, node in enumerate(
+                    train_nodes) if 'relu' in train_nodes}
+                return_nodes['fc'] = 'layerminus0'
             else:
                 raise NotImplementedError
-        
+
         elif layers == 'default':
             if model_name == 'resnet18':
                 return_nodes = {
@@ -150,14 +152,14 @@ class Extractor(nn.Module):
 
             else:
                 raise NotImplementedError
-            
+
         elif layers == 'last_only':
             if model_name in ['resnet18', 'resnet34', 'resnet50']:
-                return_nodes = {'fc': 'layerminus0'}            
+                return_nodes = {'fc': 'layerminus0'}
             else:
                 raise NotImplementedError
-        
+
         else:
-            raise NotImplementedError      
-        
+            raise NotImplementedError
+
         return return_nodes

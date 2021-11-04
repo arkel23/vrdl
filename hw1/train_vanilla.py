@@ -33,9 +33,6 @@ def main():
     # optimizer and scheduler
     optimizer, lr_scheduler = return_optimizer_scheduler(args, model)
 
-    if args.distributed:
-        model = torch.nn.SyncBatchNorm.convert_sync_batchnorm(model)
-        model = torch.nn.parallel.DistributedDataParallel(model, device_ids=[args.local_rank])
     if torch.cuda.is_available():
         torch.backends.cudnn.benchmark = True
 
@@ -45,44 +42,45 @@ def main():
 
     # routine
     for epoch in range(1, args.epochs+1):
-        if args.distributed:
-            train_loader.sampler.set_epoch(epoch)
         lr_scheduler.step(epoch)
-        
-        train_acc, train_loss = train(epoch, train_loader, model, criterion, optimizer, args)
+        train_acc, train_loss = train(epoch, train_loader, model, criterion,
+                                      optimizer, args)
         if not args.skip_eval:
             val_acc, val_loss = validate(val_loader, model, criterion, args)
         else:
             val_acc = 0
             val_loss = 0
 
-        if args.local_rank == 0:
-            print("==> Training...Epoch: {} | LR: {}".format(epoch, optimizer.param_groups[0]['lr']))
-            wandb.log({'epoch': epoch, 'train_acc': train_acc, 'train_loss': train_loss, 
-                       'val_acc': val_acc, 'val_loss': val_loss})
-            
-            # save the best model
-            if val_acc > best_acc:
-                best_acc = val_acc
-                best_epoch = epoch
-                save_model(args, model, epoch, val_acc, mode='best', optimizer=optimizer)
-            # regular saving
-            if epoch % args.save_freq == 0:
-                save_model(args, model, epoch, val_acc, mode='epoch', optimizer=optimizer)
-            # VRAM memory consumption
-            curr_max_memory = torch.cuda.max_memory_reserved() / (1024 ** 3)
-            if curr_max_memory > max_memory:
-                max_memory = curr_max_memory
+        print("Training...Epoch: {} | LR: {}".format(
+            epoch, optimizer.param_groups[0]['lr']))
+        wandb.log({'epoch': epoch, 'train_acc': train_acc,
+                   'train_loss': train_loss,
+                   'val_acc': val_acc, 'val_loss': val_loss})
 
-    if args.local_rank == 0:
-        # save last model
-        save_model(args, model, epoch, val_acc, mode='last', optimizer=optimizer)
+        # save the best model
+        if val_acc > best_acc:
+            best_acc = val_acc
+            best_epoch = epoch
+            save_model(args, model, epoch, val_acc,
+                       mode='best', optimizer=optimizer)
+        # regular saving
+        if epoch % args.save_freq == 0:
+            save_model(args, model, epoch, val_acc,
+                       mode='epoch', optimizer=optimizer)
+        # VRAM memory consumption
+        curr_max_memory = torch.cuda.max_memory_reserved() / (1024 ** 3)
+        if curr_max_memory > max_memory:
+            max_memory = curr_max_memory
 
-        # summary stats
-        time_end = time.time()
-        time_total = time_end - time_start
-        no_params = count_params_single(model)
-        summary_stats(args.epochs, time_total, best_acc, best_epoch, max_memory, no_params)
+    # save last model
+    save_model(args, model, epoch, val_acc, mode='last', optimizer=optimizer)
+
+    # summary stats
+    time_end = time.time()
+    time_total = time_end - time_start
+    no_params = count_params_single(model)
+    summary_stats(args.epochs, time_total, best_acc,
+                  best_epoch, max_memory, no_params)
 
 
 if __name__ == '__main__':
