@@ -23,6 +23,13 @@ tmp*.py
 !**/id2name_dic.csv
 !**/setup.sh
 !**/scripts/*
+!**/download_extract_data.py
+!**/cocosplit.py
+!**/create_cocostyle_labels.py
+!**/svhn_classes.txt
+!**/train*.json
+!**/val.json
+!**/test.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

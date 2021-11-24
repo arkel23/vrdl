@@ -1,4 +1,4 @@
-# Homework 1
+# Homework 2
 
 ## Results and summary
 
@@ -7,26 +7,33 @@ gradient clipping above 1, and utilizing the whole 3k images for training (skipp
 
 ## Hardware
 
-The experiments with L-16 were run on a workstation with NVIDIA Quadro RTX 8000 with 48GB VRAM. The rest were run on servers 
-with either V100 32GB VRAM or RTX 3090 with 24GB VRAM.
+All experiments were run on workstation with either NVIDIA Quadro RTX 8000 48GB 
+VRAM, V100 32GB VRAM or RTX 3090 with 24GB VRAM.
 
 ## Reproducing submission
 
 ### Installation
 
-Run each of the lines in the setup.sh to setup the environment, including downloading ViT pretrained models.
+Run each of the lines in the setup.sh to setup the environment, 
+including downloading ViT pretrained models.
 
 ### Download and prepare dataset
-
-Go into data_skipeval and run `prepare_dataset.sh`. It will download the dataset, extract it into its corresponding folders, and make the 
-required dataset files for reproducing the best results. If you would prefer the version with validation, then do the same but go into the 
-data folder and run `prepare_dataset.sh`.
+```
+cd data
+python download_extract_data.py
+python create_cocostyle_labels.py
+python cocosplit.py --annotations train_val.json --train train.json \
+--test val.json --split 0.9
+cd ..
+python tools/dataset_converters/images2coco_modified.py data/test/ \
+data/svhn_classes.txt data/test.json
+```
 
 ### Train model
 
 Train the best model:
 
-`python train_vanilla.py --model L_16 --base_lr 0.08 --batch_size 4 --pretrained --weight_decay 0 --clip_grad 1.0 --skip_eval --dataset_path data_skipeval`
+`python tools/train.py configs/custom_faster_rcnn_r50_fpn_1x_coco.py --no-validate`
 
 ### Evaluation
 
@@ -38,8 +45,7 @@ of best model and put it into folder:
 `python inference.py --path_backbone save/models/L_16_is448_bs4_blr0.08decay0.0_ptTruefzFalse_trial0_skipTrue/L_16_last.pth`
 
 ## Reference
-* <https://github.com/HobbitLong/RepDistiller>
-* <https://github.com/arkel23/IntermediateFeaturesAugmentedRepDistiller>
-* <https://github.com/arkel23/PyTorch-Pretrained-ViT>
-* <https://github.com/lukemelas/PyTorch-Pretrained-ViT>
+* <https://github.com/open-mmlab/mmdetection>
+* <https://github.com/akarazniewicz/cocosplit/blob/master/cocosplit.py>
+* <https://github.com/z3588191/NCTU-Selected-Topics-in-Visual-Recognition-using-Deep-Learning-Homework-2/blob/main/create_digit_annot.py>
 
