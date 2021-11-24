@@ -62,8 +62,8 @@ test_pipeline = [
 ]
 
 data = dict(
-    samples_per_gpu=2,
-    workers_per_gpu=16,
+    samples_per_gpu=16,
+    workers_per_gpu=4,
     train=dict(
         type='RepeatDataset',
         times=3,
@@ -90,4 +90,5 @@ data = dict(
         pipeline=test_pipeline))
 evaluation = dict(interval=1, metric='bbox')
 
-runner = dict(type='EpochBasedRunner', max_epochs=2)
+lr_config = dict(step=[14, 18])
+runner = dict(type='EpochBasedRunner', max_epochs=20)
