@@ -5,7 +5,7 @@ _base_ = [
     '../_base_/default_runtime.py'
 ]
 
-load_from = 'checkpoints/faster_rcnn_r50_fpn_1x_coco_20200130-047c8118.pth'
+load_from = 'checkpoints/faster_rcnn_r50_fpn_mstrain_3x_coco.pth'
 
 # dataset settings
 dataset_type = 'CocoDataset'

@@ -3,13 +3,16 @@
 .idea/
 **/data/*
 **/data_skipeval/*
+**/work_dirs/
 output*/
 ckpts/
 *.pth
 *.t7
 *.png
 *.jpg
+*.json
 tmp*.py
+**/checkpoints
 
 *.nfs*
 *.out
