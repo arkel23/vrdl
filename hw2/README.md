@@ -52,9 +52,9 @@ run all cells to download packages, setup and download required files, and infer
 
 Alternatively, for local evaluation, run:
 
-`python inference.py --config $PATH_TO_CONFIG \
---ckpt $PATH_TO_CKPT
---data $PATH_TO_TEST
+`python inference.py --config configs/custom/vfnet_r101_fpn_mdconv_c3-c5_mstrain_2x_svhn_666x400.py \
+--ckpt checkpoints/vfnet_r101_fpn_666x400_svhn_epoch3.pth
+--data data/test
 `
 
 #### Generate COCO submission
