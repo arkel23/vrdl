@@ -2,8 +2,8 @@
 
 ## Results and summary
 
-Our best model reaches an accuracy of 91.3617 in the competition using ViT L-16, batch size 4, base_lr 0.08, weight decay 0, 
-gradient clipping above 1, and utilizing the whole 3k images for training (skipping validation), and using the last epoch for test.
+Our best model, [VarifocalNet](https://arxiv.org/abs/2008.13367) with a ResNet-101 backbone, achieves mAP of 0.412197, inference time per image of 0.2186 s,
+and 4.58 FPS.
 
 ## Hardware
 
@@ -14,10 +14,18 @@ VRAM, V100 32GB VRAM or RTX 3090 with 24GB VRAM.
 
 ### Installation
 
-Run each of the lines in the setup.sh to setup the environment, 
-including downloading ViT pretrained models.
+Run each of the lines in the `setup.sh` to setup the environment or 
+```
+chmod +x setup.sh
+./setup.sh
+```
 
 ### Download and prepare dataset
+
+Downloads data from Google Drive, then creates the COCO style labels, and
+finally makes a train and val split from the train_val original split. Also,
+prepares the test data to be used with [mmdetection](https://github.com/open-mmlab/mmdetection/) library.
+
 ```
 cd data
 python download_extract_data.py
@@ -33,16 +41,32 @@ data/svhn_classes.txt data/test.json
 
 Train the best model:
 
-`python tools/train.py configs/custom_faster_rcnn_r50_fpn_1x_coco.py --no-validate`
+`python tools/train.py configs/custom/vfnet_r101_fpn_mdconv_c3-c5_mstrain_2x_svhn_666x400.py`
 
 ### Evaluation
 
-Download the pretrained checkpoint from [Google Drive](https://drive.google.com/drive/folders/1l1RLUiglv0MHUREi56KBoVFckOulcbVM?usp=sharing)
-of best model and put it into folder:
+#### Test inference speed
 
-`mv L_16_last.pth save/models/L_16_is448_bs4_blr0.08decay0.0_ptTruefzFalse_trial0_skipTrue/`
+On [Colab](https://colab.research.google.com/drive/1bVP0XQlN5X47KKh07N13lA7GlmtECZuI?usp=sharing)
+run all cells to download packages, setup and download required files, and inference model speed.
 
-`python inference.py --path_backbone save/models/L_16_is448_bs4_blr0.08decay0.0_ptTruefzFalse_trial0_skipTrue/L_16_last.pth`
+Alternatively, for local evaluation, run:
+
+`python inference.py --config $PATH_TO_CONFIG \
+--ckpt $PATH_TO_CKPT
+--data $PATH_TO_TEST
+`
+
+#### Generate COCO submission
+
+Download the pretrained checkpoint of best model from 
+[Google Drive](https://drive.google.com/file/d/1XK7YfK1ImlhZXY62CO8omJVful-tGGAV/view?usp=sharing)
+and put it into checkpoints directory:
+
+`python tools/test.py configs/custom/vfnet_r101_fpn_mdconv_c3-c5_mstrain_2x_svhn_666x400.py \ 
+checkpoints/vfnet_r101_fpn_666x400_svhn_epoch3.pth \
+--format-only --options "jsonfile_prefix=./vfnet_r101_fpn_mdconv_c3-c5_mstrain_2x_svhn_666x400_epoch3`
+
 
 ## Reference
 * <https://github.com/open-mmlab/mmdetection>
