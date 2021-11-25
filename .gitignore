@@ -33,6 +33,7 @@ tmp*.py
 !**/train*.json
 !**/val.json
 !**/test.json
+!**/answer.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
