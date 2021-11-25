@@ -1,0 +1,6 @@
+funcy==1.16
+googledrivedownloader==0.4
+h5py==3.6.0
+opencv-python==4.5.4.60
+openmim==0.1.5
+scikit-learn==1.0.1
