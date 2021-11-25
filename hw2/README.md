@@ -39,6 +39,13 @@ data/svhn_classes.txt data/test.json
 
 ### Train model
 
+First download pretrained checkpoint and put into checkpoints directory:
+
+```
+mkdir checkpoints
+wget -O vfnet_r101_fpn_mdconv_c3-c5_mstrain_2x_coco.pth https://download.openmmlab.com/mmdetection/v2.0/vfnet/vfnet_r101_fpn_mdconv_c3-c5_mstrain_2x_coco/vfnet_r101_fpn_mdconv_c3-c5_mstrain_2x_coco_20201027pth-7729adb5.pth
+```
+
 Train the best model:
 
 `python tools/train.py configs/custom/vfnet_r101_fpn_mdconv_c3-c5_mstrain_2x_svhn_666x400.py`
