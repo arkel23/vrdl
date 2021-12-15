@@ -2,14 +2,14 @@
 
 ## Results and summary
 
-Our best model, [VarifocalNet](https://arxiv.org/abs/2008.13367) with a 
-ResNet-101 backbone, achieves mAP of 0.412197, 
-inference time per image of 0.2186 s, and 4.58 FPS.
+Our best model, [Mask R-CNN](https://arxiv.org/abs/1703.06870) with a 
+[ResNeXt-101-64x4d](https://arxiv.org/abs/1611.05431) backbone, 
+and using [Dice loss](https://arxiv.org/abs/1606.04797), 
+achieves a score of 0.242279.
 
 ## Hardware
 
-All experiments were run on workstation with either NVIDIA Quadro RTX 8000 48GB 
-VRAM, V100 32GB VRAM or RTX 3090 with 24GB VRAM.
+All experiments were run on workstation with RTX 3090 with 24GB VRAM.
 
 ## Reproducing submission
 
@@ -23,11 +23,12 @@ chmod +x setup.sh
 
 ### Download and prepare dataset
 
-Downloads data from Google Drive, then creates the COCO style labels, and
+Downloads data from Google Drive, then creates the COCO style labels (and
+reorganizes folders along the way), and
 finally makes a train and val split from the train_val original split. Also,
 prepares the test data to be used with 
-[mmdetection](https://github.com/open-mmlab/mmdetection/) library.
-
+[mmdetection](https://github.com/open-mmlab/mmdetection/) library (
+manually modifies the file with the test image IDs to be compatible).
 ```
 cd data
 python download_extract_data.py
@@ -47,13 +48,13 @@ First download pretrained checkpoint and put into checkpoints directory:
 ```
 mkdir checkpoints
 cd checkpoints
-wget -O mask_rcnn_r50_fpn_mstrain-poly_3x_coco.pth https://download.openmmlab.com/mmdetection/v2.0/mask_rcnn/mask_rcnn_r50_fpn_mstrain-poly_3x_coco/mask_rcnn_r50_fpn_mstrain-poly_3x_coco_20210524_201154-21b550bb.pth
+wget -O mask_rcnn_x101_64x4d_fpn_mstrain-poly_3x_coco.pth https://download.openmmlab.com/mmdetection/v2.0/mask_rcnn/mask_rcnn_x101_64x4d_fpn_mstrain-poly_3x_coco/mask_rcnn_x101_64x4d_fpn_mstrain-poly_3x_coco_20210526_120447-c376f129.pth
 cd ..
 ```
 
 Train the best model:
 
-`python tools/train.py configs/custom/vfnet_r101_fpn_mdconv_c3-c5_mstrain_2x_svhn_666x400.py`
+`python tools/train.py configs/custom/mask_rcnn_x101_64x4d_fpn_mstrain-poly_3x_dice_nuclei.py`
 
 ### Evaluation
 
@@ -63,9 +64,9 @@ Download the pretrained checkpoint of best model from
 [Google Drive](https://drive.google.com/file/d/1XK7YfK1ImlhZXY62CO8omJVful-tGGAV/view?usp=sharing)
 and put it into checkpoints directory:
 
-`python tools/test.py configs/custom/vfnet_r101_fpn_mdconv_c3-c5_mstrain_2x_svhn_666x400.py \ 
-checkpoints/vfnet_r101_fpn_666x400_svhn_epoch3.pth \
---format-only --options "jsonfile_prefix=./vfnet_r101_fpn_mdconv_c3-c5_mstrain_2x_svhn_666x400_epoch3"`
+`python tools/test.py configs/custom/mask_rcnn_x101_64x4d_fpn_mstrain-poly_3x_dice_nuclei.py \ 
+checkpoints/mask_rcnn_x101_64x4d_fpn_mstrain-poly_3x_dice_nuclei_epoch12.pth \
+--format-only --options "jsonfile_prefix=./mask_rcnn_x101_64x4d_fpn_mstrain-poly_3x_dice_nuclei_epoch12"`
 
 ## Reference
 * <https://github.com/open-mmlab/mmdetection>
