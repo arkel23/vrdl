@@ -42,13 +42,11 @@ python edit_test.py
 ### Train model
 
 First download pretrained checkpoint and put into checkpoints directory:
-# https://drive.google.com/drive/folders/1DMelfiwQ1pEc8pJRW096-BML6w3o2IFU
-# https://drive.google.com/file/d/1nKBsZvRQ6RccgCIJRGs4eEdDTyQvgI9J/view?usp=sharing
-
 ```
 mkdir checkpoints
 cd checkpoints
-wget -O mask_rcnn_x101_64x4d_fpn_mstrain-poly_3x_coco.pth https://download.openmmlab.com/mmdetection/v2.0/mask_rcnn/mask_rcnn_x101_64x4d_fpn_mstrain-poly_3x_coco/mask_rcnn_x101_64x4d_fpn_mstrain-poly_3x_coco_20210526_120447-c376f129.pth
+wget -O mask_rcnn_x101_64x4d_fpn_mstrain-poly_3x_coco.pth 
+https://download.openmmlab.com/mmdetection/v2.0/mask_rcnn/mask_rcnn_x101_64x4d_fpn_mstrain-poly_3x_coco/mask_rcnn_x101_64x4d_fpn_mstrain-poly_3x_coco_20210526_120447-c376f129.pth
 cd ..
 ```
 
@@ -61,7 +59,7 @@ Train the best model:
 #### Generate COCO submission
 
 Download the pretrained checkpoint of best model from 
-[Google Drive](https://drive.google.com/file/d/1XK7YfK1ImlhZXY62CO8omJVful-tGGAV/view?usp=sharing)
+[Google Drive](https://drive.google.com/file/d/1UFfsgtLbKcJeia11LlamShPOoXiofghw/view?usp=sharing)
 and put it into checkpoints directory:
 
 `python tools/test.py configs/custom/mask_rcnn_x101_64x4d_fpn_mstrain-poly_3x_dice_nuclei.py \ 
