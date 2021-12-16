@@ -22,6 +22,12 @@ tmp*.py
 !**/prepare_dataset.py
 !**/train.csv
 !**/val.csv
+!**/test.csv
+!**/fish.csv
+!**/classid_classname.csv
+!**/data_split.py
+!**/renumber_classes.py
+!**/make_data_dic_imagenetstyle.py
 !**/train_val.csv
 !**/id2name_dic.csv
 !**/setup.sh
