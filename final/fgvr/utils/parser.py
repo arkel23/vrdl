@@ -2,7 +2,7 @@ import os
 import argparse
 import torch
 
-from .model_utils import get_model_name
+from .model_utils import get_model_name, get_ifa_tkgather
 
 
 def add_adjust_common_dependent(args):
@@ -63,7 +63,7 @@ def parse_common():
     parser.add_argument('--skip_eval', action='store_true', help='skip eval')
     parser.add_argument('--ifa', action='store_true', help='IFA cls head')
     parser.add_argument('--token_gather', type=str, default='cls',
-                        choices=['cls', 'gap_pre', 'gap_post'],
+                        choices=['cls', 'gappre', 'gappost'],
                         help='Use cls token, pool before or pool after')
 
     return parser
@@ -79,7 +79,7 @@ def parse_option_train():
 
     args = add_adjust_common_dependent(args)
 
-    args.run_name = '{}_ifa{}_{}_is{}_bs{}_blr{}decay{}_pt{}_skip{}'.format(
+    args.run_name = '{}_{}_{}_is{}_bs{}_blr{}decay{}_pt{}_skip{}'.format(
         args.model, args.ifa, args.token_gather,
         args.image_size, args.batch_size, args.base_lr, args.weight_decay,
         args.pretrained, args.skip_eval)
@@ -101,6 +101,7 @@ def parse_option_inference():
 
     assert args.path_checkpoint, 'Requires checkpoint to load model.'
     args.model = get_model_name(args.path_checkpoint)
+    args.ifa, args.token_gather = get_ifa_tkgather(args.path_checkpoint)
     args = add_adjust_common_dependent(args)
 
     print(args)

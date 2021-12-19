@@ -18,7 +18,7 @@ class VisionTransformer(nn.Module):
         self.model = ViT(cfg, name=args.model, pretrained=args.pretrained,
                          load_fc_layer=not(args.ifa), ret_interm_repr=args.ifa)
 
-        if args.token_gather == 'gap_pre':
+        if args.token_gather == 'gappre':
             self.pool_pre = nn.Sequential(
                 Rearrange('b s c -> b c s'),
                 nn.AdaptiveAvgPool1d(1),
@@ -26,7 +26,7 @@ class VisionTransformer(nn.Module):
             )
 
         if args.ifa:
-            if args.token_gather in ['cls', 'gap_pre']:
+            if args.token_gather in ['cls', 'gappre']:
                 self.pooled = True
                 self.ifa_head = nn.Sequential(
                     nn.Linear(cfg.num_hidden_layers, 1),
