@@ -12,6 +12,12 @@ sudo apt install p7zip-full p7zip-rar
 rm *.zip *.7z
 mv train fish
 
+# take as input imagenet like dictionary and make a .csv with all files
 python make_data_dic_imagenetstyle.py --path fish
+# change classes ids to alphabetical order (required for submission)
 python renumber_classes.py --df_files fish.csv --df_id_name classid_classname.csv
+# split into 0.9 and 0.1 for train/val
 python data_split.py --fn fish.csv
+# create test.csv file for inference and submission
+python prepare_test.py --path test_stg1
+python prepare_test.py --path test_stg2 --append

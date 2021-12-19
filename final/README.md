@@ -1,4 +1,4 @@
-# Homework 1
+# Final Project
 
 ## Results and summary
 
@@ -36,6 +36,9 @@ of best model and put it into folder:
 `mv L_16_last.pth save/models/L_16_is448_bs4_blr0.08decay0.0_ptTruefzFalse_trial0_skipTrue/`
 
 `python inference.py --path_checkpoint save/models/L_16_is448_bs4_blr0.08decay0.0_ptTruefzFalse_trial0_skipTrue/L_16_last.pth`
+
+Then upload directly to Kaggle for evaluation with:
+`kaggle competitions submit -c the-nature-conservancy-fisheries-monitoring -f submission.csv -m "Message"`
 
 ## Reference
 * <https://github.com/HobbitLong/RepDistiller>
