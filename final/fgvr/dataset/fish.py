@@ -27,7 +27,7 @@ class Fish(data.Dataset):
         if self.train:
             self.set_dir = os.path.join(self.root, 'train.csv')
         else:
-            self.set_dir = os.path.join(self.root, 'test.csv')
+            self.set_dir = os.path.join(self.root, 'val.csv')
         self.df = pd.read_csv(self.set_dir)
 
         self.targets = self.df['class_id'].to_numpy()

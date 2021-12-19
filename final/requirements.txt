@@ -1,0 +1,6 @@
+# pytorch, torchvision, numpy, pandas
+# install first https://github.com/arkel23/PyTorch-Pretrained-ViT 
+einops==0.3.0
+transformers==4.9.1
+wandb==0.11.2
+timm==0.4.12
