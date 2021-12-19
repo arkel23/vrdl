@@ -1,75 +1,38 @@
 import os
 import torch
 
-from fgvr.models import model_extractor
+from fgvr.models import resnet, VisionTransformer
+
+
+def build_model(args):
+    if 'resnet' in args.model:
+        m = resnet(args)
+    else:
+        m = VisionTransformer(args)
+
+    print('Loading pt={} {} model with {} classes output head'.format(
+        args.pretrained, args.model, args.n_cls))
+
+    m = m.to(args.device)
+    return m
 
 
 def get_model_name(path_model):
     """parse model name"""
     segments = path_model.split('/')[-2].split('_')
-    if segments[0] == 'linear' or segments[0] == 'student':
-        return segments[1]
-    elif 'H' in segments or 'B' in segments or 'L' in segments:
+    if 'H' in segments or 'B' in segments or 'L' in segments:
         return segments[0] + '_' + segments[1]
     else:
         return segments[0]
 
 
-def load_model_head(path_model, n_cls, image_size, freeze, pretrained, layers):
-    print('==> loading model with classification head')
+def load_model_inference(args):
 
-    model_name = get_model_name(path_model)
-    model = model_extractor(model_name, num_classes=n_cls,
-                            image_size=image_size, freeze=freeze,
-                            pretrained=pretrained, layers=layers)
+    model = build_model(args)
 
-    model.load_state_dict(torch.load(path_model)['model'], strict=True)
-    print('==> done')
-
-    return model
-
-
-def load_model_nohead(
-        path_model, model_name, image_size, n_cls, freeze, pretrained, layers):
-    if path_model:
-        model_name = get_model_name(path_model)
-    else:
-        model_name = model_name
-
-    model = model_extractor(model_name, num_classes=n_cls,
-                            image_size=image_size, freeze=freeze,
-                            pretrained=pretrained, layers=layers)
-
-    if path_model:
-        print('==> loading model without classification head')
-        state_dict = torch.load(path_model)['model']
-        for key in list(state_dict.keys())[-2:]:
-            state_dict.pop(key)
-
-        ret = model.load_state_dict(state_dict, strict=False)
-        print('Missing keys when loading pretrained weights: {}'.format(
-            ret.missing_keys))
-        print('Unexpected keys when loading pretrained weights: {}'.format(
-            ret.unexpected_keys))
-        print('==> done')
-
-    return model
-
-
-def load_model_inference(
-        path_backbone, model_name, n_cls, image_size, pretrained, layers):
-    if path_backbone:
-        model_name = get_model_name(path_backbone)
-    else:
-        model_name = model_name
-
-    model = model_extractor(model_name, num_classes=n_cls,
-                            image_size=image_size,
-                            pretrained=pretrained, layers=layers)
-
-    if path_backbone:
+    if args.path_checkpoint:
         print('==> loading model backbone')
-        state_dict = torch.load(path_backbone)['model']
+        state_dict = torch.load(args.path_checkpoint)['model']
 
         ret = model.load_state_dict(state_dict, strict=False)
         print('Missing keys when loading pretrained weights: {}'.format(

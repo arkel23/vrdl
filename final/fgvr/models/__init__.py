@@ -1,2 +1,2 @@
-from .extractor import model_extractor
-from .util import *
+from .resnet import resnet
+from .vit import VisionTransformer

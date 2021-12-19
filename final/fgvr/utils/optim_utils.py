@@ -1,19 +1,12 @@
-import math
-
 from timm.scheduler import create_scheduler
 from timm.optim import create_optimizer
 
 
 def return_optimizer_scheduler(opt, model):
 
-    if opt.sched == 'step':
-        opt.warmup_lr = opt.lr
-    elif opt.sched == 'cosine':
-        opt.warmup_lr = 1e-6
-
+    opt.warmup_lr = 1e-6
     opt.opt_eps = 1e-8
     opt.opt_betas = None
-
     opt.lr_noise = None
     opt.lr_noise_pct = 0.67
     opt.lr_noise_std = 1.0

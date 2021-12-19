@@ -13,7 +13,7 @@ def build_dataloaders(args, vanilla=True):
         args.dataset_path, train_transform)
     val_set = get_val_set(args.dataset_path, val_transform)
     n_data = len(train_set)
-    n_cls = train_set.num_classes
+    args.n_cls = train_set.num_classes
 
     train_loader = data.DataLoader(train_set, batch_size=args.batch_size,
                                    shuffle=True,
@@ -28,8 +28,8 @@ def build_dataloaders(args, vanilla=True):
         val_loader = None
 
     if vanilla:
-        return train_loader, val_loader, n_cls
-    return train_loader, val_loader, n_cls, n_data
+        return train_loader, val_loader
+    return train_loader, val_loader, n_data
 
 
 def get_val_set(dataset_path, transform):

@@ -26,17 +26,13 @@ def prepare_img(img_path, img_size):
 
 def main():
     args = parse_option_inference()
-    set_seed(args.seed, args.rank)
+    set_seed(args.seed)
 
     # dataloader
-    _, _, n_cls = build_dataloaders(args)
+    _, _ = build_dataloaders(args)
 
     # model
-    model = load_model_inference(
-            args.path_checkpoint, args.model, n_cls, args.image_size,
-            args.pretrained, 'last_only')
-
-    model.to(args.device)
+    model = load_model_inference(args)
     model.eval()
 
     # all the testing images
@@ -62,7 +58,7 @@ def main():
             f.write(',{}'.format(v))
         f.write('\n')
 
-        if i % 100 == 0:
+        if i % args.print_freq == 0:
             print('{}/{}: {} | {} | {}'.format(i, len(test_images),
                   fn, img_path, outputs))
 

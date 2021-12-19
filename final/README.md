@@ -26,7 +26,7 @@ data folder and run `prepare_dataset.sh`.
 
 Train the best model:
 
-`python train_vanilla.py --model L_16 --base_lr 0.08 --batch_size 4 --pretrained --weight_decay 0 --clip_grad 1.0 --skip_eval --dataset_path data_skipeval`
+`python train.py --model L_16 --base_lr 0.08 --batch_size 4 --pretrained --weight_decay 0 --clip_grad 1.0 --skip_eval --dataset_path data_skipeval`
 
 ### Evaluation
 
@@ -35,7 +35,7 @@ of best model and put it into folder:
 
 `mv L_16_last.pth save/models/L_16_is448_bs4_blr0.08decay0.0_ptTruefzFalse_trial0_skipTrue/`
 
-`python inference.py --path_checkpoint save/models/L_16_is448_bs4_blr0.08decay0.0_ptTruefzFalse_trial0_skipTrue/L_16_last.pth`
+`python inference.py --path_checkpoint save/models/L_16_is448_bs4_blr0.08decay0.0_ptTruefzFalse_trial0_skipTrue/L_16_last.pth --print_freq 1000`
 
 Then upload directly to Kaggle for evaluation with:
 `kaggle competitions submit -c the-nature-conservancy-fisheries-monitoring -f submission.csv -m "Message"`

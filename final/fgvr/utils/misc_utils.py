@@ -11,9 +11,9 @@ def count_params_single(model):
     return sum([p.numel() for p in model.parameters()])
 
 
-def set_seed(seed=0, rank=0):
-    torch.manual_seed(seed + rank)
-    random.seed(seed + rank)
+def set_seed(seed=0):
+    torch.manual_seed(seed)
+    random.seed(seed)
 
 
 def summary_stats(epochs, time_total, best_acc,

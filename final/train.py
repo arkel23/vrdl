@@ -2,12 +2,11 @@ import time
 import wandb
 import torch
 
-from fgvr.models import model_extractor
+from fgvr.utils.parser import parse_option_train
+from fgvr.utils.model_utils import build_model, save_model
 from fgvr.dataset.build_dataloaders import build_dataloaders
-from fgvr.utils.model_utils import save_model
-from fgvr.utils.parser import parse_option_vanilla
 from fgvr.utils.optim_utils import return_optimizer_scheduler
-from fgvr.utils.loops import train_vanilla as train, validate
+from fgvr.utils.loops import train, validate
 from fgvr.utils.misc_utils import count_params_single, set_seed, summary_stats
 
 
@@ -17,17 +16,14 @@ def main():
     best_epoch = 0
     max_memory = 0
 
-    args = parse_option_vanilla()
-    set_seed(args.seed, args.rank)
+    args = parse_option_train()
+    set_seed(args.seed)
 
     # dataloader
-    train_loader, val_loader, n_cls = build_dataloaders(args)
+    train_loader, val_loader = build_dataloaders(args)
 
     # model and criterion
-    model = model_extractor(
-        args.model, n_cls, args.image_size,
-        args.freeze, args.pretrained, 'last_only')
-    model.to(args.device)
+    model = build_model(args)
     criterion = torch.nn.CrossEntropyLoss().to(args.device)
 
     # optimizer and scheduler
@@ -36,9 +32,8 @@ def main():
     if torch.cuda.is_available():
         torch.backends.cudnn.benchmark = True
 
-    if args.local_rank == 0:
-        wandb.init(config=args)
-        wandb.run.name = '{}'.format(args.model_name)
+    wandb.init(config=args)
+    wandb.run.name = '{}'.format(args.run_name)
 
     # routine
     for epoch in range(1, args.epochs+1):
