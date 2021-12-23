@@ -12,7 +12,9 @@ from fgvr.utils.misc_utils import set_seed
 
 def prepare_img(img_path, img_size):
     transform = transforms.Compose([
-        transforms.Resize(img_size+32),
+        transforms.Resize(
+            img_size+32,
+            interpolation=transforms.InterpolationMode.BICUBIC),
         transforms.CenterCrop(img_size),
         transforms.ToTensor(),
         transforms.Normalize(mean=[0.5, 0.5, 0.5],

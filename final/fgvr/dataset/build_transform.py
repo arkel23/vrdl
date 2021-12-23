@@ -57,7 +57,9 @@ def build_transform(args, split):
             transform = build_deit_transform(is_train=True, args=args)
         else:
             transform = transforms.Compose([
-                transforms.Resize((args.image_size+32, args.image_size+32)),
+                transforms.Resize(
+                    (args.image_size+32, args.image_size+32),
+                    interpolation=transforms.InterpolationMode.BICUBIC),
                 transforms.RandomCrop((args.image_size, args.image_size)),
                 transforms.RandomHorizontalFlip(),
                 transforms.ColorJitter(brightness=0.1,
@@ -71,7 +73,9 @@ def build_transform(args, split):
             transform = build_deit_transform(is_train=False, args=args)
         else:
             transform = transforms.Compose([
-                transforms.Resize(args.image_size+32),
+                transforms.Resize(
+                    args.image_size+32,
+                    interpolation=transforms.InterpolationMode.BICUBIC),
                 transforms.CenterCrop(args.image_size),
                 transforms.ToTensor(),
                 transforms.Normalize(mean=[0.5, 0.5, 0.5],
