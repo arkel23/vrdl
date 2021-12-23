@@ -20,7 +20,7 @@ tmp*.py
 *.sh
 !**/prepare_dataset.sh
 !**/prepare_dataset.py
-!**/calc_avg_size.py
+!**/calc_avg_size_channel_mean_std.py
 !**/train.csv
 !**/val.csv
 !**/test.csv
