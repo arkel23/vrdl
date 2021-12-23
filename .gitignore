@@ -20,6 +20,7 @@ tmp*.py
 *.sh
 !**/prepare_dataset.sh
 !**/prepare_dataset.py
+!**/calc_avg_size.py
 !**/train.csv
 !**/val.csv
 !**/test.csv
