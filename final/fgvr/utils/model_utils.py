@@ -26,15 +26,17 @@ def get_model_name(path_model):
         return segments[0]
 
 
-def get_ifa_tkgather(path_model):
+def get_ifa_tkgather_freeze(path_model):
     """parse model name"""
     segments = path_model.split('/')[-2].split('_')
     if 'H' in segments or 'B' in segments or 'L' in segments:
         ifa = True if segments[2] == 'True' else False
-        return ifa, segments[3]
+        freeze = True if segments[4] == 'True' else False
+        return ifa, segments[3], freeze
     else:
-        ifa = True if segments[2] == 'True' else False
-        return ifa, segments[2]
+        ifa = True if segments[1] == 'True' else False
+        freeze = True if segments[3] == 'True' else False
+        return ifa, segments[2], freeze
 
 
 def load_model_inference(args):

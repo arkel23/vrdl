@@ -2,7 +2,7 @@ import os
 import argparse
 import torch
 
-from .model_utils import get_model_name, get_ifa_tkgather
+from .model_utils import get_model_name, get_ifa_tkgather_freeze
 
 
 def add_adjust_common_dependent(args):
@@ -61,6 +61,7 @@ def parse_common():
     parser.add_argument('--pretrained', action='store_true',
                         help='use pretrained model on imagenet')
     parser.add_argument('--skip_eval', action='store_true', help='skip eval')
+    parser.add_argument('--freeze', action='store_true', help='freeze back')
     parser.add_argument('--ifa', action='store_true', help='IFA cls head')
     parser.add_argument('--token_gather', type=str, default='cls',
                         choices=['cls', 'gappre', 'gappost'],
@@ -79,10 +80,10 @@ def parse_option_train():
 
     args = add_adjust_common_dependent(args)
 
-    args.run_name = '{}_{}_{}_is{}_bs{}_blr{}decay{}_pt{}_skip{}'.format(
-        args.model, args.ifa, args.token_gather,
+    args.run_name = '{}_{}_{}_{}_is{}_bs{}_blr{}decay{}_pt{}_val{}'.format(
+        args.model, args.ifa, args.token_gather, args.freeze,
         args.image_size, args.batch_size, args.base_lr, args.weight_decay,
-        args.pretrained, args.skip_eval)
+        args.pretrained, not(args.skip_eval))
 
     args.save_folder = os.path.join('save', 'models', args.run_name)
     os.makedirs(args.save_folder, exist_ok=True)
@@ -101,7 +102,8 @@ def parse_option_inference():
 
     assert args.path_checkpoint, 'Requires checkpoint to load model.'
     args.model = get_model_name(args.path_checkpoint)
-    args.ifa, args.token_gather = get_ifa_tkgather(args.path_checkpoint)
+    args.ifa, args.token_gather, args.freeze = get_ifa_tkgather_freeze(
+        args.path_checkpoint)
     args = add_adjust_common_dependent(args)
 
     print(args)
