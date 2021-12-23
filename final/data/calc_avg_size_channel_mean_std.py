@@ -46,8 +46,8 @@ def calc_avg_size_channel_mean_std(args):
     avg_width = sum(width_list) / len(width_list)
     avg_height = sum(height_list) / len(height_list)
     channel_mean_array = np.array(channel_mean_list)
-    channel_mean = np.mean(channel_mean_array, axis=0)
-    channel_std = np.std(channel_mean_array, axis=0)
+    channel_mean = np.mean(channel_mean_array, axis=0) / 255
+    channel_std = np.std(channel_mean_array, axis=0) / 255
 
     print(f'Average width: {avg_width}\tAverage height: {avg_height}')
     print(f'Channel mean: {channel_mean}\tChannel std: {channel_std}')

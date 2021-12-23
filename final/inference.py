@@ -9,8 +9,8 @@ from fgvr.utils.parser import parse_option_inference
 from fgvr.utils.model_utils import load_model_inference
 from fgvr.utils.misc_utils import set_seed
 
-MEAN = [93.31786143, 107.12554859, 105.98322504]
-STD = [19.44589962, 11.72930063, 15.76595482]
+MEAN = [0.3659524, 0.42010019, 0.41562049]
+STD = [0.07625843, 0.04599726, 0.06182727]
 DEFAULT = [0.5, 0.5, 0.5]
 
 

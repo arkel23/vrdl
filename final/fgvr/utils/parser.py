@@ -82,10 +82,10 @@ def parse_option_train():
 
     args = add_adjust_common_dependent(args)
 
-    args.run_name = '{}_{}_{}_{}_is{}_bs{}_blr{}decay{}_pt{}_val{}'.format(
+    args.run_name = '{}_{}_{}_{}_is{}_bs{}_blr{}wd{}_pt{}_val{}_mn{}'.format(
         args.model, args.ifa, args.token_gather, args.freeze,
         args.image_size, args.batch_size, args.base_lr, args.weight_decay,
-        args.pretrained, not(args.skip_eval))
+        args.pretrained, not(args.skip_eval), args.custom_mean_std)
 
     args.save_folder = os.path.join('save', 'models', args.run_name)
     os.makedirs(args.save_folder, exist_ok=True)
