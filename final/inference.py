@@ -9,16 +9,27 @@ from fgvr.utils.parser import parse_option_inference
 from fgvr.utils.model_utils import load_model_inference
 from fgvr.utils.misc_utils import set_seed
 
+MEAN = [93.31786143, 107.12554859, 105.98322504]
+STD = [19.44589962, 11.72930063, 15.76595482]
+DEFAULT = [0.5, 0.5, 0.5]
 
-def prepare_img(img_path, img_size):
+
+def prepare_img(img_path, args):
+    if args.custom_mean_std:
+        mean = MEAN
+        std = STD
+    else:
+        mean = DEFAULT
+        std = DEFAULT
+
     transform = transforms.Compose([
         transforms.Resize(
-            img_size+32,
+            args.img_size+32,
             interpolation=transforms.InterpolationMode.BICUBIC),
-        transforms.CenterCrop(img_size),
+        transforms.CenterCrop(args.img_size),
         transforms.ToTensor(),
-        transforms.Normalize(mean=[0.5, 0.5, 0.5],
-                             std=[0.5, 0.5, 0.5])
+        transforms.Normalize(mean=mean,
+                             std=std)
     ])
 
     img = Image.open(img_path).convert('RGB')
@@ -48,7 +59,7 @@ def main():
     for i, img_path in enumerate(test_images):
         fn = os.path.basename(os.path.normpath(img_path))
         img_path_full = os.path.join(args.dataset_path, 'test', fn)
-        img = prepare_img(img_path_full, args.image_size).to(args.device)
+        img = prepare_img(img_path_full, args).to(args.device)
 
         with torch.no_grad():
             outputs = model(img).squeeze(0)

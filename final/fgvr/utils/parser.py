@@ -60,6 +60,8 @@ def parse_common():
         '--deit_recipe', action='store_true', help='use deit augs')
     parser.add_argument('--pretrained', action='store_true',
                         help='use pretrained model on imagenet')
+    parser.add_argument('--custom_mean_std', action='store_true',
+                        help='custom mean/std')
     parser.add_argument('--skip_eval', action='store_true', help='skip eval')
     parser.add_argument('--freeze', action='store_true', help='freeze back')
     parser.add_argument('--ifa', action='store_true', help='IFA cls head')

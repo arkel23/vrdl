@@ -1,6 +1,10 @@
 from torchvision import transforms
 from timm.data import create_transform
 
+MEAN = [93.31786143, 107.12554859, 105.98322504]
+STD = [19.44589962, 11.72930063, 15.76595482]
+DEFAULT = [0.5, 0.5, 0.5]
+
 
 def build_deit_transform(is_train, args):
     ''' taken from DeiT paper
@@ -16,6 +20,13 @@ def build_deit_transform(is_train, args):
     args.remode = 'pixel'
     args.recount = 1
     args.resplit = False
+
+    if args.custom_mean_std:
+        mean = MEAN
+        std = STD
+    else:
+        mean = DEFAULT
+        std = DEFAULT
 
     resize_im = args.image_size > 32
     if is_train:
@@ -46,12 +57,19 @@ def build_deit_transform(is_train, args):
         t.append(transforms.CenterCrop(args.image_size))
 
     t.append(transforms.ToTensor())
-    t.append(transforms.Normalize(mean=[0.5, 0.5, 0.5],
-                                  std=[0.5, 0.5, 0.5]))
+    t.append(transforms.Normalize(mean=mean,
+                                  std=std))
     return transforms.Compose(t)
 
 
 def build_transform(args, split):
+    if args.custom_mean_std:
+        mean = MEAN
+        std = STD
+    else:
+        mean = DEFAULT
+        std = DEFAULT
+    
     if split == 'train':
         if args.deit_recipe:
             transform = build_deit_transform(is_train=True, args=args)
@@ -65,8 +83,8 @@ def build_transform(args, split):
                 transforms.ColorJitter(brightness=0.1,
                                        contrast=0.1, saturation=0.1, hue=0.1),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.5, 0.5, 0.5],
-                                     std=[0.5, 0.5, 0.5])
+                transforms.Normalize(mean=mean,
+                                     std=std)
             ])
     else:
         if args.deit_recipe:
@@ -78,8 +96,8 @@ def build_transform(args, split):
                     interpolation=transforms.InterpolationMode.BICUBIC),
                 transforms.CenterCrop(args.image_size),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.5, 0.5, 0.5],
-                                     std=[0.5, 0.5, 0.5])
+                transforms.Normalize(mean=mean,
+                                     std=std)
             ])
 
     return transform
