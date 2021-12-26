@@ -1,4 +1,4 @@
-exp_name = 'edsr_x3c64b16_g1_300k_hw4'
+exp_name = 'edsr_x3c64b16_g1_300k_hw4_continue'
 
 scale = 3
 # model settings
