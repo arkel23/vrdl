@@ -24,9 +24,9 @@ def prepare_img(img_path, args):
 
     transform = transforms.Compose([
         transforms.Resize(
-            args.img_size+32,
+            args.image_size+32,
             interpolation=transforms.InterpolationMode.BICUBIC),
-        transforms.CenterCrop(args.img_size),
+        transforms.CenterCrop(args.image_size),
         transforms.ToTensor(),
         transforms.Normalize(mean=mean,
                              std=std)
