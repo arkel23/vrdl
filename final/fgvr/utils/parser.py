@@ -2,7 +2,7 @@ import os
 import argparse
 import torch
 
-from .model_utils import get_model_name, get_ifa_tkgather_freeze
+from .model_utils import get_model_name, get_ifa_tkgather_freeze_is
 
 
 def add_adjust_common_dependent(args):
@@ -104,8 +104,8 @@ def parse_option_inference():
 
     assert args.path_checkpoint, 'Requires checkpoint to load model.'
     args.model = get_model_name(args.path_checkpoint)
-    args.ifa, args.token_gather, args.freeze = get_ifa_tkgather_freeze(
-        args.path_checkpoint)
+    (args.ifa, args.token_gather, args.freeze,
+        args.image_size) = get_ifa_tkgather_freeze_is(args.path_checkpoint)
     args = add_adjust_common_dependent(args)
 
     print(args)
