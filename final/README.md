@@ -2,12 +2,12 @@
 
 ## Results and summary
 
-Our best model reaches an accuracy of 91.3617 in the competition using ViT L-16, batch size 4, base_lr 0.08, weight decay 0, 
-gradient clipping above 1, and utilizing the whole 3k images for training (skipping validation), and using the last epoch for test.
+Our best model reaches an accuracy of 1.61553 (top 35) in the competition using ViT B-16, batch size 16, base_lr 0.08, weight decay 1e-4, 
+gradient clipping above 1, with a split of 0.9 to 0.1 for training and validation, respectively, and using the best checkpoint according to the validation accuracy.
 
 ## Hardware
 
-The experiments with L-16 were run on a workstation with NVIDIA Quadro RTX 8000 with 48GB VRAM. The rest were run on servers 
+The experiments with L-16 and larger image sizes (640) were run on a workstation with NVIDIA Quadro RTX 8000 with 48GB VRAM. The rest were run on servers 
 with either V100 32GB VRAM or RTX 3090 with 24GB VRAM.
 
 ## Reproducing submission
@@ -26,19 +26,22 @@ data folder and run `prepare_dataset.sh`.
 
 Train the best model:
 
-`python train.py --model L_16 --base_lr 0.08 --batch_size 4 --pretrained --weight_decay 0 --clip_grad 1.0 --skip_eval --dataset_path data_skipeval`
+`python train.py --model B_16 --base_lr 0.08 --batch_size 16 --pretrained --weight_decay 0.0001 --clip_grad 1.0`
 
 ### Evaluation
 
-Download the pretrained checkpoint from [Google Drive](https://drive.google.com/drive/folders/1l1RLUiglv0MHUREi56KBoVFckOulcbVM?usp=sharing)
+Download the pretrained checkpoint from [Google Drive](https://drive.google.com/file/d/10juQWGykD8wmWlEGw6aP75l4Cuu1SGOL/view?usp=sharing)
 of best model and put it into folder:
 
-`mv L_16_last.pth save/models/L_16_is448_bs4_blr0.08decay0.0_ptTruefzFalse_trial0_skipTrue/`
+`mkdir checkpoints/B_16_False_cls_False_is448_bs16_blr0.08decay0.0001_ptTrue_skipFalse`
 
-`python inference.py --path_checkpoint save/models/L_16_is448_bs4_blr0.08decay0.0_ptTruefzFalse_trial0_skipTrue/L_16_last.pth --print_freq 1000`
+`mv B_16_best.pth checkpoints/B_16_False_cls_False_is448_bs16_blr0.08decay0.0001_ptTrue_skipFalse`
+
+`python inference.py --path_checkpoint checkpoints/B_16_False_cls_False_is448_bs16_blr0.08decay0.0001_ptTrue_skipFalse/B_16_best.pth --print_freq 1000`
 
 Then upload directly to Kaggle for evaluation with:
-`kaggle competitions submit -c the-nature-conservancy-fisheries-monitoring -f submission.csv -m "Message"`
+
+`kaggle competitions submit -c the-nature-conservancy-fisheries-monitoring -f submission.csv -m "B_16_False_cls_False_is448_bs16_blr0.08decay0.0001_ptTrue_skipFalse/B_16_best.pth"`
 
 ## Reference
 * <https://github.com/HobbitLong/RepDistiller>
