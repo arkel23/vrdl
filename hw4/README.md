@@ -2,10 +2,8 @@
 
 ## Results and summary
 
-Our best model, [Mask R-CNN](https://arxiv.org/abs/1703.06870) with a 
-[ResNeXt-101-64x4d](https://arxiv.org/abs/1611.05431) backbone, 
-and using [Dice loss](https://arxiv.org/abs/1606.04797), 
-achieves a score of 0.242279.
+Our best model, [EDSR](https://arxiv.org/abs/1707.02921)
+achieves a score of 28.2207.
 
 ## Hardware
 
@@ -24,7 +22,7 @@ chmod +x setup.sh
 ### Download and prepare dataset
 
 Downloads data from Google Drive, and prepares the data to be used with 
-[MMEditing]](https://github.com/open-mmlab/mmediting/) library (renames
+[MMEditing](https://github.com/open-mmlab/mmediting/) library (renames
 folders, resizes images to be divisible by integer factors, rescales them
 to low resolution versions by X factors, and creates metadata file).
 ```
@@ -35,28 +33,36 @@ chmod +x prepare_dataset.sh
 
 ### Train model
 
-First download pretrained checkpoint and put into checkpoints directory:
-```
-mkdir checkpoints
-cd checkpoints
-wget -O mask_rcnn_x101_64x4d_fpn_mstrain-poly_3x_coco.pth 
-https://download.openmmlab.com/mmdetection/v2.0/mask_rcnn/mask_rcnn_x101_64x4d_fpn_mstrain-poly_3x_coco/mask_rcnn_x101_64x4d_fpn_mstrain-poly_3x_coco_20210526_120447-c376f129.pth
-cd ..
-```
+Download x2 checkpoint from [Drive](https://drive.google.com/file/d/16iqzbRvmzv-m3xm8GEx0EIVfIe0N48U0/view?usp=sharing), 
+make folder and put it into it:
 
-Train the best model:
+`mkdir work_dirs/edsr_x2c64b16_g1_300k_hw4/`
 
-`python tools/train.py configs/custom/edsr_x3c64b16_g1_300k_hw4.py`
+`mv iter_300000.pth work_dirs/edsr_x2c64b16_g1_300k_hw4/`
+
+Train the best model (requires continuing from checkpoint of x2):
+
+`python tools/train.py configs/custom/edsr_x3c64b16_g1_300k_hw4_continue.py`
 
 ### Evaluation
 
-#### Generate COCO submission
+#### Find best checkpoint
+
+`python find_best.py --path_log_json work_dirs/edsr_x3c64b16_g1_300k_hw4_continue/202YMMDD_HHMMSS.log.json`
+
+#### Generate high-resolution images
 
 Download the pretrained checkpoint of best model from 
-[Google Drive](https://drive.google.com/file/d/1UFfsgtLbKcJeia11LlamShPOoXiofghw/view?usp=sharing)
+[Google Drive](https://drive.google.com/file/d/1XDDpbUlhBlDT4vl3sHlqLQo7Fsc3Da7N/view?usp=sharing)
 and put it into checkpoints directory:
 
-`python inference.py configs/custom/edsr_x3c64b16_g1_300k_hw4.py checkpoints/edsr_x3c64b16_g1_300k_hw4_iter_65000.pth data/testing_lr_images/testing_lr_images/ results/`
+`python inference.py configs/custom/edsr_x3c64b16_g1_300k_hw4_continue.py checkpoints/EDSR_x3_continue_iter_10000.pth data/testing_lr_images/testing_lr_images/ results/`
+
+#### Prepare submission
+
+`cd results`
+
+`zip sample_submission.zip *.png`
 
 ## Reference
 * <https://github.com/open-mmlab/mmediting>
